@@ -11,9 +11,18 @@
 
 @interface ViewController ()
 
+@property (nonatomic, strong) AVAudioPlayer *audioPlayer; // 设置成property之后就能播放了
+
 @end
 
 @implementation ViewController
+
+//- (AVAudioPlayer *)audioPlayer {
+//    if (!_audioPlayer) {
+//        _audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL: error:nil];
+//    }
+//    return _audioPlayer;
+//}
 
 - (void)randomColor {
     NSLog(@"%s", __func__);
@@ -27,7 +36,17 @@
 #pragma mark - action
 - (IBAction)playMusciButtonDidTouch {
     // mp3
-    
+    NSURL *bgMusic = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Ecstasy" ofType:@"mp3"]];
+    @try {
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+        [[AVAudioSession sharedInstance] setActive:YES error:nil];
+        self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:bgMusic error:nil];
+        [self.audioPlayer prepareToPlay];
+        [self.audioPlayer play];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"%@", exception);
+    }
     
     // gradient
     NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(randomColor) userInfo:nil repeats:true];
